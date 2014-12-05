@@ -10,6 +10,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'spring',        group: :development
 gem 'devise'
+gem 'doorkeeper'
 gem 'devise_invitable'
 gem 'figaro', '>= 1.0.0.rc1'
 gem 'haml-rails'
