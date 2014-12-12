@@ -11,7 +11,6 @@ class Api::V1::UsersController < Api::V1::BaseController
   after_filter :verify_policy_scoped, :only => :index
 
   def index
-
     @users = policy_scope(User)
     authorize User
     render :json => {:info => "Users", :users => @users}, :status => 200
@@ -35,9 +34,14 @@ class Api::V1::UsersController < Api::V1::BaseController
   end
 
   def update
-    @user = User.find(current_user.id)
+    @user = User.find(params[:id])
     authorize @user
-    respond_with :api, @user.update_attributes(secure_params)
+
+    if @user.update_attributes(secure_params)
+      render :json => {:info => "Current user", :user => current_user}, :status => 200
+    else
+      render :json => {:errors =>  @user.errors.messages}, :status => 422
+    end
   end
 
   def destroy
@@ -50,7 +54,7 @@ class Api::V1::UsersController < Api::V1::BaseController
 
   def permission_denied
     respond_to do |format|
-      format.json { render :json => {:error => error.message}, :status => 403 }
+      format.json { render :json => {:error => t(:access_denied)}, :status => 403 }
     end
   end
 
