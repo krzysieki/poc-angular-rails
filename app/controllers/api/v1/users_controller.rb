@@ -5,14 +5,13 @@ class Api::V1::UsersController < Api::V1::BaseController
   rescue_from Pundit::NotAuthorizedError, with: :permission_denied
 
   # Enforces access right checks for individuals resources
-  after_filter :verify_authorized, :except => :index
+  after_filter :verify_authorized, :except => [:index, :create]
 
   # Enforces access right checks for collections
   after_filter :verify_policy_scoped, :only => :index
 
   def index
     @users = policy_scope(User)
-    authorize User
     render :json => {:info => "Users", :users => @users}, :status => 200
   end
 
@@ -24,12 +23,11 @@ class Api::V1::UsersController < Api::V1::BaseController
   def create
     @user = User.create(secure_params)
 
-    authorize @user
     if @user.valid?
       sign_in(@user)
-      respond_with @user, :location => api_users_path
+      render :json => {:info => "Current user", :user => @user}, :status => 200
     else
-      respond_with @user.errors, :location => api_users_path
+      render :json => {:errors =>  @user.errors }, :status => 422
     end
   end
 
@@ -40,7 +38,7 @@ class Api::V1::UsersController < Api::V1::BaseController
     if @user.update_attributes(secure_params)
       render :json => {:info => "Current user", :user => current_user}, :status => 200
     else
-      render :json => {:errors =>  @user.errors.messages}, :status => 422
+      render :json => {:errors =>  @user.errors.messages }, :status => 422
     end
   end
 

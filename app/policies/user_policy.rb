@@ -13,7 +13,7 @@ class UserPolicy
       if user.admin?
         scope.all
       else
-        scope.where(:role => :user)
+        scope.where(:role => User.roles[:user])
       end
     end
   end

@@ -17,13 +17,13 @@
   ],
   "scripts": {"postdeploy": "bundle exec rake db:migrate; bundle exec rake db:seed"},
   "env": {
-    "GMAIL_USERNAME": {
-      "description": "Your Gmail address for sending mail.",
+    "MANDRILL_USERNAME": {
+      "description": "Your Mandrill address for sending mail.",
       "value": "user@example.com",
       "required": false
     },
-    "GMAIL_PASSWORD": {
-      "description": "Your Gmail password for sending mail.",
+    "MANDRILL_APIKEY": {
+      "description": "Your Mandrill API key for sending mail.",
       "value": "changeme",
       "required": false
     },
